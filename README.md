@@ -1,1 +1,1 @@
-<img width="572" height="382" alt="Second-Landing-Page" src="https://github.com/user-attachments/assets/e05f005f-af4f-4bed-907d-1ce2880e0b25" />
+<img width="558" height="404" alt="Second landing page Desktop View" src="https://github.com/user-attachments/assets/cffc7b9c-2ecd-4e4f-af5b-c32f73204c1a" />
