@@ -1,0 +1,24 @@
+body {
+  height: 100vh;
+  font-family: "Poppins", sans-serif;
+  background-color: #010101;
+}
+main,
+footer {
+  background-color: #010101;
+  color: #fff;
+}
+
+#Header {
+  background-color: rgb(28, 25, 25);
+}
+#Logo,
+#Flag {
+  cursor: pointer;
+  transition: transform 0.3s;
+}
+
+#Logo:hover,
+#Flag:hover {
+  transform: scale(1.1);
+}
