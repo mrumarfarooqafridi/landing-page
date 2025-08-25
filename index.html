@@ -15,6 +15,15 @@
     />
     <link rel="stylesheet" href="style.css" />
     <title>Lottery</title>
+    <style>
+      @media (min-width: 320px) and (max-width: 620px) {
+        #End {
+          width: 92%;
+          font-size: 11px;
+          font-weight: bold;
+        }
+      }
+    </style>
   </head>
   <body>
     <!-- Header -->
@@ -24,19 +33,19 @@
           src="/header-img.png"
           alt="Header Logo"
           class="img-fluid"
-          style="max-height: 50px"
+          style="max-height: 50px; cursor: pointer"
         />
         <img
           src="/Flag.png"
           alt="Flag"
           class="img-fluid"
-          style="max-height: 30px"
+          style="max-height: 30px; cursor: pointer"
         />
       </div>
     </header>
 
     <!-- Main -->
-    <main class="container py-5">
+    <main class="container py-5" style="margin-top: 50px">
       <section class="row align-items-center g-4">
         <!-- Image -->
         <div class="col-md-6 text-center">
@@ -58,30 +67,37 @@
           </div>
 
           <h5 class="mt-4">Do you want to win an Apple iPad?</h5>
+          <h5 class="mt-4 d-none">Do you currently own any Apple product?</h5>
+          <h5 class="mt-4 d-none">
+            Are you willing to pay a small delivery fee of &dollar;2.00 to
+            receive your Apple iPad?
+          </h5>
 
           <div
+            id="options"
             class="border border-success rounded p-3 mt-3"
             style="cursor: pointer"
           >
-            <h5 class="fw-bold">Yes I Do!</h5>
+            <h5 id="Yes" class="fw-bold">Yes I Do!</h5>
             <p class="mb-0">Try to win a brand new Apple iPad</p>
           </div>
 
           <div
+            id="options"
             class="border border-success rounded p-3 mt-3"
             style="cursor: pointer"
           >
-            <h5 class="fw-bold">Maybe, but tell me more</h5>
+            <h5 class="fw-bold" id="No">Maybe, but tell me more</h5>
             <p class="mb-0">Get more information about this lottery</p>
           </div>
         </div>
       </section>
 
       <!-- Features Section -->
-      <section class="mt-5">
+      <section class="mt-5" style="margin-top: 100px !important">
         <div class="row text-center g-4">
           <div class="col-6 col-md-3">
-            <h5>Screen</h5>
+            <h5 class="text-start">Screen</h5>
             <div
               class="d-flex justify-content-center align-items-center p-4 fs-4 fw-bold"
               style="
@@ -99,7 +115,7 @@
           </div>
 
           <div class="col-6 col-md-3">
-            <h5>Color/Flash</h5>
+            <h5 class="text-start">Color/Flash</h5>
             <div
               class="d-flex justify-content-center align-items-center p-4 fs-4 fw-bold"
               style="
@@ -113,7 +129,7 @@
           </div>
 
           <div class="col-6 col-md-3">
-            <h5>Capacity</h5>
+            <h5 class="text-start">Capacity</h5>
             <div
               class="d-flex justify-content-center align-items-center p-4 text-light fs-4 fw-bold"
               style="
@@ -127,7 +143,7 @@
           </div>
 
           <div class="col-6 col-md-3">
-            <h5>Shipping</h5>
+            <h5 class="text-start">Shipping</h5>
             <div
               class="d-flex justify-content-center align-items-center p-4 text-light fs-4 fw-bold"
               style="
@@ -146,10 +162,13 @@
     <!-- Footer -->
     <footer class="text-white text-center py-3 mt-5">
       <button
+        id="End"
         class="btn btn-lg text-light text-dark fw-bold py-3"
-        style="background-color: #1cd3d6; max-width: 500px"
+        style="background-color: #1cd3d6; max-width: 500px; padding: 15px 70px"
       >
-        I want to win ipad for Free!
+        <a href="#Header" class="text-decoration-none text-light"
+          >I want to win ipad for Free!</a
+        >
       </button>
     </footer>
 
@@ -158,5 +177,109 @@
       integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
       crossorigin="anonymous"
     ></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        let step = 0;
+
+        // Get question headings (in order)
+        const questions = Array.from(document.querySelectorAll("h5.mt-4"));
+        // Q0 = "Do you want to win an Apple iPad?" (visible)
+        // Q1 = "Do you currently own any Apple product?" (hidden d-none)
+        // Q2 = "Are you willing to pay..." (hidden d-none)
+
+        // Get Yes/No text <h5> elements
+        const yesText = document.getElementById("Yes");
+        const noText = document.getElementById("No");
+
+        // Get both option boxes
+        const optionBoxes = Array.from(
+          document.querySelectorAll('[id="options"]')
+        );
+
+        // Placeholder for loader + congratulations
+        let resultBox = document.createElement("div");
+        resultBox.id = "resultBox";
+        optionBoxes[1].insertAdjacentElement("afterend", resultBox);
+
+        // Helper: fade in
+        function fadeIn(el) {
+          el.classList.remove("d-none");
+          el.style.opacity = 0;
+          el.style.transition = "opacity 0.5s";
+          setTimeout(() => {
+            el.style.opacity = 1;
+          }, 10);
+        }
+
+        // Helper: fade out
+        function fadeOut(el, callback) {
+          el.style.transition = "opacity 0.5s";
+          el.style.opacity = 0;
+          setTimeout(() => {
+            el.classList.add("d-none");
+            if (callback) callback();
+          }, 500);
+        }
+
+        function handleClick() {
+          step++;
+
+          if (step === 1) {
+            // Show Q2 with fade
+            fadeIn(questions[1]);
+            document.querySelector(".mt-4").style.display = "none";
+            noText.textContent = "No";
+          } else if (step === 2) {
+            // Fade out Q0 + Q1, fade in Q2
+            fadeOut(questions[0]);
+            fadeOut(questions[1], () => fadeIn(questions[2]));
+            yesText.textContent = "Yes";
+            noText.textContent = "No";
+          } else if (step === 3) {
+            // Hide options + all questions, fade in loader then congratulations
+            optionBoxes.forEach((box) => fadeOut(box));
+            questions.forEach((q) => fadeOut(q));
+
+            // Loader fade in
+            resultBox.innerHTML = `
+          <div class="text-center p-4" style="opacity:0; transition:opacity 0.5s;">
+            <div class="spinner-border text-success mb-3" role="status" style="width:3rem;height:3rem;">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="fw-bold mb-0">Processing your entry...</p>
+          </div>
+        `;
+            setTimeout(() => {
+              resultBox.firstElementChild.style.opacity = 1;
+            }, 10);
+
+            // After 2s → show congratulations with fade
+            setTimeout(() => {
+              resultBox.innerHTML = `
+            <div class="text-center p-4 border rounded" style="opacity:0; transition:opacity 0.5s;">
+              <h2 class="text-success fw-bold">🎉 Congratulations!</h2>
+              <p class="mt-2 mb-3">
+                You have completed the survey, enter your details on the next
+                page and confirm your product!
+              </p>
+              <button class="btn btn-success rounded-pill px-4">Claim Your Prize</button>
+            </div>
+          `;
+              setTimeout(() => {
+                resultBox.firstElementChild.style.opacity = 1;
+              }, 10);
+            }, 2000);
+
+            // Disable further clicks
+            optionBoxes.forEach((box) => (box.style.pointerEvents = "none"));
+          }
+        }
+
+        // Attach to both options
+        optionBoxes.forEach((box) =>
+          box.addEventListener("click", handleClick)
+        );
+      });
+    </script>
   </body>
 </html>
